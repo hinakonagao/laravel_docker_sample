@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: ./docker/web/Dockerfile
     ports:
-      - 8081:80
+      - ${WEB_PORT}:80
     volumes:
       - ./src/:/app
     depends_on:
@@ -29,10 +29,10 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_DATABASE: database
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       TZ: 'Asia/Tokyo'
     volumes:
       - mysql-volume:/var/lib/mysql
