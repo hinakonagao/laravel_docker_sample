@@ -4,27 +4,12 @@ volumes:
   mysql-store:
   
 services:
-  # client:
-  #   container_name: client
-  #   build:
-  #     context: .
-  #     dockerfile: ./docker/client/Dockerfile
-  #   ports:
-  #     - 3001:3000
-  #   volumes:
-  #     - ./client:/app:cached
-  #   command: yarn dev
-  #   stdin_open: true
-  #   tty: true
-  #   depends_on:
-  #     - nginx
-
-  api:
+  app:
     build:
       context: .
-      dockerfile: ./docker/api/Dockerfile
+      dockerfile: ./docker/app/Dockerfile
     volumes:
-      - ./api/:/app
+      - ./src/:/app
   
   web:
     build:
@@ -33,21 +18,24 @@ services:
     ports:
       - 8081:80
     volumes:
-      - ./api/:/app
+      - ./src/:/app
     depends_on:
-      - api
+      - app
   
-  # db:
-  #   build:
-  #     context: .
-  #     dockerfile: ./docker/db/Dockerfile
-  #   ports:
-  #     - 3306:3306
-  #   enviroment:
-  #     MYSQL_DATABASE: database
-  #     MYSQL_USER: user
-  #     MYSQL_PASSWORD: password
-  #     MYSQL_ROOT_PASSWORD: password
-  #     TZ: 'Asia/Tokyo'
-  #   volumes:
-  #     - mysql-volume:/var/lib/mysql
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - mysql-volume:/var/lib/mysql
+      
+volumes:
+  mysql-volume:
